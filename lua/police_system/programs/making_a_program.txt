@@ -1,0 +1,60 @@
+Any files named with the prefix cl_, sv_, or sh_ will be included and AddCSLuaFile'd accordingly.
+
+A program must have be registered in the client realm with EggrollPoliceSystem:RegisterProgram( name, program_table ). Registering a program in the server realm is optional.
+
+Programs can be de-registered with EggrollPoliceSystem:DeRegisterProgram( name ).
+
+Icon positions are in { x, y } format and is recommended to be offset by 50 in the x-direction and/or 60 in the y-direction for each program per row/column starting from { 40, 60 }.
+
+PROGRAM:Init( ) (client) is required.
+
+PROGRAM:Close( ) (client) is optional.
+
+PROGRAM:Init( ) (server) is optional.
+
+PROGRAM:Close( ) (server) is optional.
+
+PROGRAM.ProgramFrame is set before the program initializes and is the VGUI frame of the program.
+
+Each program has its own instance on each computer, similar to how scripted entities work.
+
+Example Program Below:
+
+Client:
+
+local PROGRAM = { }
+PROGRAM.Name = "Test Program"
+PROGRAM.Icon = "icon16/box.png"
+PROGRAM.IconPosition = { 25, 60 }
+
+function PROGRAM:Init( computer ) -- Called when the program is opened.
+	self.ProgramFrame.WindowBackgroundColor = Color( 20, 20, 20 )
+
+	-- REMOVE BELOW LATER
+
+	local ToBeImplemented = vgui.Create( "DLabel", self.ProgramFrame )
+	ToBeImplemented:SetFont( "EPSTitleLoginFont" )
+	ToBeImplemented:SetTextColor( Color( 200, 200, 200 ) )
+	ToBeImplemented:SetText( "To Be Implemented" )
+	ToBeImplemented:SizeToContents( )
+	ToBeImplemented:CenterHorizontal( 0.5 )
+	ToBeImplemented:CenterVertical( 0.5 )
+end
+
+function PROGRAM:Close( ) -- Called right before the program is closed.
+end
+
+EggrollPoliceSystem:RegisterProgram( PROGRAM.Name, PROGRAM )
+
+Server:
+
+local PROGRAM = { }
+PROGRAM.Name = "Test Program"
+
+function PROGRAM:Init( user, computer ) -- Called when the program is opened.
+end
+
+function PROGRAM:Close( ) -- Called right after the program is closed.
+end
+
+EggrollPoliceSystem:RegisterProgram( PROGRAM.Name, PROGRAM )
