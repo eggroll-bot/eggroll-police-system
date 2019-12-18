@@ -1,15 +1,30 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Lint
-      run: |
-        echo Using GLuaLint 1.12.0.
-        wget https://github.com/FPtje/GLuaFixer/releases/download/1.12.0/glualint-1.12.0-linux-stripped.zip
-        unzip glualint-1.12.0-linux-stripped.zip
-        ./glualint .
+      - uses: actions/checkout@v1
+      - name: Download and unpack glualint
+        run: |
+          wget https://github.com/FPtje/GLuaFixer/releases/download/1.12.0/glualint-1.12.0-linux-stripped.zip
+          unzip glualint-1.12.0-linux-stripped.zip
+      - name: Execute glualint
+        run: ./glualint .
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare for upload
+        run: |
+          rm -r .git
+          rm -r .github
+          rm .gmsignore
+          rm *.md
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: eggroll_police_system
+          path: .
