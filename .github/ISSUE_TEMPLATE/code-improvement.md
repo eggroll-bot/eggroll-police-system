@@ -7,8 +7,8 @@ assignees: BLEEPBLOOPforLife
 
 ---
 
-**Describe what can be improved**
-A clear and concise description of what the bug is.
+**Describe what code can be improved**
+A clear and concise description of what code can be improved.
 
 **File(s) and/or line number(s)**
 File(s): 
