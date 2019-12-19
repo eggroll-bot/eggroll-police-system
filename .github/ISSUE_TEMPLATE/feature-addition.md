@@ -1,7 +1,7 @@
 ---
 name: Feature Addition
 about: For any features that need to be added.
-title: "[FEATURE] Feature Addition"
+title: "[FEATURE] "
 labels: enhancement
 assignees: BLEEPBLOOPforLife
 
