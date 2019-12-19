@@ -1,4 +1,5 @@
 --[[
+	
 3D2D VGUI Wrapper
 Copyright (c) 2015-2017 Alexander Overvoorde, Matt Stevens
 
@@ -18,11 +19,12 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ]]
 
 --[[
 
-Formatting modified by: TheAsian EggrollMaker
+Reformatted for consistency with the rest of the addon.
 
 ]]
 
@@ -38,7 +40,9 @@ local function getCursorPos( )
 	-- if there wasn't an intersection, don't calculate anything.
 	if not p then return end
 	if WorldToLocal( LocalPlayer( ):GetShootPos( ), Angle( 0, 0, 0 ), origin, angle ).z < 0 then return end
+
 	if maxrange > 0 and p:Distance( LocalPlayer( ):EyePos( ) ) > maxrange then return end
+
 	local pos = WorldToLocal( p, Angle( 0, 0, 0 ), origin, angle )
 
 	return pos.x, -pos.y
@@ -104,7 +108,7 @@ local function postPanelEvent( pnl, event, ... )
 	end
 end
 
--- Always have issues, but less
+-- Always have issue, but less
 local function checkHover( pnl, x, y, found )
 	if not ( x and y ) then
 		x, y = getCursorPos( )
@@ -150,23 +154,23 @@ local function checkHover( pnl, x, y, found )
 end
 
 -- Mouse input
-hook.Add( "KeyPress", "VGUI3D2DMousePress", function( _, key )
-	if key == IN_USE then
+hook.Add( "KeyPress", "VGUI3D2DMousePress", function( _, keyReleased )
+	if keyReleased == IN_USE then
 		for pnl in pairs( inputWindows ) do
 			if IsValid( pnl ) then
 				origin = pnl.Origin
 				scale = pnl.Scale
 				angle = pnl.Angle
 				normal = pnl.Normal
-				key = input.IsKeyDown( KEY_LSHIFT ) and MOUSE_RIGHT or MOUSE_LEFT
+				local key = input.IsKeyDown( KEY_LSHIFT ) and MOUSE_RIGHT or MOUSE_LEFT
 				postPanelEvent( pnl, "OnMousePressed", key )
 			end
 		end
 	end
 end )
 
-hook.Add( "KeyRelease", "VGUI3D2DMouseRelease", function( _, keyPressed )
-	if keyPressed == IN_USE then
+hook.Add( "KeyRelease", "VGUI3D2DMouseRelease", function( _, keyReleased )
+	if keyReleased == IN_USE then
 		for pnl, key in pairs( usedpanel ) do
 			if IsValid( pnl ) then
 				origin = pnl.Origin
@@ -238,6 +242,8 @@ function Panel:Paint3D2D( )
 		end
 	end
 
+	-- Update the hover state of controls
+	checkHover( self )
 	-- Store the orientation of the window to calculate the position outside the render loop
 	self.Origin = origin
 	self.Scale = scale
