@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: For any outstanding bugs.
-title: "[BUG] Bug Report"
+title: "[BUG] "
 labels: bug
 assignees: BLEEPBLOOPforLife
 
