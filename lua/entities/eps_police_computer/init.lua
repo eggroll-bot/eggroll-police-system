@@ -29,7 +29,7 @@ function ENT:Login( ply )
 	timer.Create( "EPS_Police_Computer_Logout_Distance_" .. self:EntIndex( ), 0.5, 0, function( )
 		local max_dist_squared = EggrollPoliceSystem.Config.DistanceBeforePoliceComputerLogout ^ 2
 
-		if self.GetActiveUser and self:GetActiveUser( ):GetPos( ):DistToSqr( self:GetPos( ) ) > max_dist_squared then -- Check if GetActiveUser exists because of data table variable delays.
+		if self:GetActiveUser( ):GetPos( ):DistToSqr( self:GetPos( ) ) > max_dist_squared then
 			net.Start( "EPS_LoginToPoliceComputer" ) -- Log out on client.
 			net.WriteEntity( self )
 			net.Send( self:GetActiveUser( ) )
@@ -61,6 +61,10 @@ function ENT:Logout( )
 	hook.Remove( "PlayerDisconnected", "EPS_Police_Computer_Logout_Disconnect_" .. self:EntIndex( ) )
 	hook.Remove( "OnPlayerChangedTeam", "EPS_Police_Computer_Logout_Job_Switch_" .. self:EntIndex( ) )
 	self:SetActiveUser( nil )
+end
+
+function ENT:OnRemove( )
+	self:Logout( )
 end
 
 net.Receive( "EPS_LoginToPoliceComputer", function( _, ply )
