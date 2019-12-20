@@ -12,6 +12,46 @@ function PROGRAM:CreateTitle( )
 	self.TitleLabel:CenterVertical( 0.1 )
 end
 
+function PROGRAM:Create2DTextPrompt( callback ) -- Calls the callback function after successful text entry with args: text.
+	if not self.TextPromptEntry then
+		local scr_w, scr_h = ScrW( ), ScrH( )
+		self.TextPromptBG = vgui.Create( "EditablePanel" ) -- Have to use an EditablePanel because DTextEntries require something derived from EditablePanels.
+		self.TextPromptBG:SetSize( scr_w * 0.3, scr_h * 0.2 )
+		self.TextPromptBG:Center( )
+		self.TextPromptBG:MakePopup( )
+
+		self.TextPromptBG.Paint = function( _, w, h )
+			surface.SetDrawColor( 75, 75, 75 )
+			surface.DrawRect( 0, 0, w, h )
+		end
+
+		self.TextPromptEntry = vgui.Create( "DTextEntry", self.TextPromptBG )
+		self.TextPromptEntry:SetSize( self.TextPromptBG:GetWide( ) / 1.05, self.TextPromptBG:GetTall( ) / 1.30 )
+		self.TextPromptEntry:CenterHorizontal( )
+		self.TextPromptEntry:CenterVertical( 0.44 )
+		self.TextPromptEntry:SetMultiline( true )
+
+		self.TextPromptSubmit = vgui.Create( "DButton", self.TextPromptBG )
+		self.TextPromptSubmit:SetText( "Submit" )
+		self.TextPromptSubmit:SetSize( self.TextPromptBG:GetWide( ) * 0.2, self.TextPromptBG:GetTall( ) * 0.1 )
+		self.TextPromptSubmit:CenterHorizontal( 0.5 )
+		self.TextPromptSubmit:CenterVertical( 0.91 )
+
+		self.TextPromptSubmit.DoClick = function( )
+			self.TextPromptBG:Hide( )
+			callback( self.TextPromptEntry:GetText( ) )
+		end
+	else
+		self.TextPromptBG:Show( )
+		self.TextPromptEntry:SetText( "" )
+
+		self.TextPromptSubmit.DoClick = function( ) -- To set the callback function again.
+			self.TextPromptBG:Hide( )
+			callback( self.TextPromptEntry:GetText( ) )
+		end
+	end
+end
+
 function PROGRAM:CreateAddPrompt( )
 	local program_frame_w, program_frame_h = self.ProgramFrame:GetWide( ), self.ProgramFrame:GetTall( )
 	local title_bar_h = program_frame_h * 0.05
@@ -77,46 +117,28 @@ function PROGRAM:CreateAddPrompt( )
 		end
 	end )
 
-	local max_width_per_line = 280
-	self.AddMemoPromptLine1 = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine1:SetWide( self.AddMemoPromptPanel:GetWide( ) - 20 )
-	self.AddMemoPromptLine1:CenterHorizontal( )
-	self.AddMemoPromptLine1:CenterVertical( 0.32 )
-	local x, y = self.AddMemoPromptLine1:GetPos( )
-	self.AddMemoPromptLine1Text = vgui.Create( "DLabel", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine1Text:SetText( "Line 1:" )
-	self.AddMemoPromptLine1Text:SizeToContents( )
-	self.AddMemoPromptLine1Text:SetPos( x, y - 20 )
+	self.AddMemoPrompt = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
+	self.AddMemoPrompt:SetSize( self.AddMemoPromptPanel:GetWide( ) - 20, self.AddMemoPromptPanel:GetTall( ) - 110 )
+	self.AddMemoPrompt:CenterHorizontal( )
+	self.AddMemoPrompt:CenterVertical( 0.575 )
+	self.AddMemoPrompt:SetMultiline( true )
+	self.AddMemoPrompt.OldOnMousePressed = self.AddMemoPrompt.OnMousePressed -- I'm reallyyy starting to hate 3D2D VGUI now. It has no support for text entry focusing.
 
-	self.AddMemoPromptLine2 = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine2:SetWide( self.AddMemoPromptPanel:GetWide( ) - 20 )
-	self.AddMemoPromptLine2:CenterHorizontal( )
-	self.AddMemoPromptLine2:CenterVertical( 0.49 )
-	x, y = self.AddMemoPromptLine2:GetPos( )
-	self.AddMemoPromptLine2Text = vgui.Create( "DLabel", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine2Text:SetText( "Line 2:" )
-	self.AddMemoPromptLine2Text:SizeToContents( )
-	self.AddMemoPromptLine2Text:SetPos( x, y - 20 )
+	self.AddMemoPrompt.OnMousePressed = function( )
+		if not IsFirstTimePredicted( ) then return end
 
-	self.AddMemoPromptLine3 = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine3:SetWide( self.AddMemoPromptPanel:GetWide( ) - 20 )
-	self.AddMemoPromptLine3:CenterHorizontal( )
-	self.AddMemoPromptLine3:CenterVertical( 0.66 )
-	x, y = self.AddMemoPromptLine3:GetPos( )
-	self.AddMemoPromptLine3Text = vgui.Create( "DLabel", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine3Text:SetText( "Line 3:" )
-	self.AddMemoPromptLine3Text:SizeToContents( )
-	self.AddMemoPromptLine3Text:SetPos( x, y - 20 )
+		self:Create2DTextPrompt( function( text )
+			--
+		end )
 
-	self.AddMemoPromptLine4 = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine4:SetWide( self.AddMemoPromptPanel:GetWide( ) - 20 )
-	self.AddMemoPromptLine4:CenterHorizontal( )
-	self.AddMemoPromptLine4:CenterVertical( 0.83 )
-	x, y = self.AddMemoPromptLine4:GetPos( )
-	self.AddMemoPromptLine4Text = vgui.Create( "DLabel", self.AddMemoPromptPanel )
-	self.AddMemoPromptLine4Text:SetText( "Line 4:" )
-	self.AddMemoPromptLine4Text:SizeToContents( )
-	self.AddMemoPromptLine4Text:SetPos( x, y - 20 )
+		return self.AddMemoPrompt:OldOnMousePressed( )
+	end
+
+	local x, y = self.AddMemoPrompt:GetPos( )
+	self.AddMemoPromptText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
+	self.AddMemoPromptText:SetText( "Memo:" )
+	self.AddMemoPromptText:SizeToContents( )
+	self.AddMemoPromptText:SetPos( x, y - 20 )
 end
 
 function PROGRAM:CreateAddButton( )
