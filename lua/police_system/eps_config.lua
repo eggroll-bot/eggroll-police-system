@@ -52,6 +52,8 @@ To add to config:
 
 - Should ALPR display the driver of the vehicle in front? Should ALPR display all of the non-driver passengers of the vehicle in front?
 
+- Which key to press to exit out of police computer DTextEntries?
+
 - Colors for backgrounds, text, etc.
 
 - Localization Stuff
