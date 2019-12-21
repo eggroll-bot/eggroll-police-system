@@ -14,8 +14,6 @@ jobs:
       - name: Run SLOC
         run: |
           sloc --keys source --details ./ 2>&1 | tee source_loc.txt # For each file.
-          echo "" >> source_loc.txt # Append new line to source_loc.txt.
-          sloc --keys source ./ 2>&1 | tee -a source_loc.txt # For all files.
       - name: Upload lines of code as an artifact
         uses: actions/upload-artifact@v1.0.0
         with:
