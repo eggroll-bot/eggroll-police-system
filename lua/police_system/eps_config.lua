@@ -18,6 +18,22 @@ Config.CanNonCopAccessPoliceComputer = false
 
 Config.DistanceBeforePoliceComputerLogout = 200
 
+-- Minimum arrest time for the improved arrest baton in seconds.
+
+Config.ArrestBatonMinArrestTime = 60
+
+-- Maximum arrest time for the improved arrest baton in seconds.
+
+Config.ArrestBatonMaxArrestTime = 500
+
+-- Arrest GUI timeout time for the improved arrest baton in seconds. (This is here so a player cannot just freeze another player indefinitely by leaving the menu open.)
+
+Config.ArrestBatonGUITimeout = 60
+
+-- Arrest baton cooldown in seconds. Set to 0 to disable. Cooldown starts from when the baton starts swinging. (This is here to help mitigate baton rushing.)
+
+Config.ArrestBatonCooldown = 0
+
 --[[
 
 To add to config:
@@ -37,10 +53,6 @@ To add to config:
 - Must handcuff before arrest?
 
 - Replace regular arrest batons with improved arrest batons automatically?
-
-- Minimum arrest time for improved arrest baton.
-
-- Maximum arrest time for improved arrest baton.
 
 - Can a non-cop access ALPR in a car? Can a access a police computer in a car?
 
