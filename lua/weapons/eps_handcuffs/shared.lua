@@ -1,5 +1,3 @@
-AddCSLuaFile( )
-
 SWEP.PrintName = "Handcuffs"
 SWEP.Author = "TheAsian EggrollMaker"
 SWEP.Contact = "theasianeggrollmaker@gmail.com"
@@ -10,7 +8,7 @@ SWEP.Base = "weapon_base"
 
 SWEP.UseHands = true
 
-SWEP.Category = "Eggroll Police System"
+SWEP.Category = "Eggroll's Police System"
 SWEP.Slot = 1
 SWEP.SlotPos = 2
 
