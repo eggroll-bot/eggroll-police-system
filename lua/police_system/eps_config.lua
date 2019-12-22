@@ -34,6 +34,10 @@ Config.ArrestBatonGUITimeout = 60
 
 Config.ArrestBatonCooldown = 0
 
+-- Should the player be able to "use" anything with the USE key while handcuffed?
+
+Config.CanUseWhileHandcuffed = false
+
 --[[
 
 To add to config:
