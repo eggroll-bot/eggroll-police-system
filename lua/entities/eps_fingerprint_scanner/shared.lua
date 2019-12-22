@@ -1,7 +1,7 @@
 ENT.Base = "base_gmodentity"
 ENT.Type = "anim"
 ENT.PrintName = "Fingerprint Scanner"
-ENT.Category = "Eggroll Police System"
+ENT.Category = "Eggroll's Police System"
 ENT.Author = "TheAsian EggrollMaker"
 ENT.Contact = "theasianeggrollmaker@gmail.com"
 ENT.Purpose = ""
