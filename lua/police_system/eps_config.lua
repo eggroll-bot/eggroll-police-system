@@ -34,7 +34,7 @@ Config.ArrestBatonGUITimeout = 60
 
 Config.ArrestBatonCooldown = 0
 
--- How far can a cop be from a player to handcuff them?
+-- How far can a cop be from a player to handcuff/un-handcuff them?
 
 Config.MaxHandcuffDistance = 90
 
