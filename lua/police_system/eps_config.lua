@@ -1,50 +1,48 @@
-local Config = EggrollPoliceSystem.Config
-
 -- Max distance to draw the screen.
 
-Config.MaxDrawDist = 512
+EggrollPoliceSystem.Config.MaxDrawDist = 512
 
 -- Which jobs should be displayed in the police computer records for a person. If the job is not listed here, it will be listed as "Unknown" in the police computer records program. Enter "CP" for all civil protection jobs or "all" for all jobs. All other jobs should be entered with "TEAM_[WhateverJob]". Example: "TEAM_GUN". Don't forget the commas between entries.
 
-Config.JobsToDisplayInRecords = {
+EggrollPoliceSystem.Config.JobsToDisplayInRecords = {
 	[ "CP" ] = true,
 }
 
 -- Can a person who does not hold a civil protection job be allowed to access a police computer? -- Setting this to true will allow a person who does not hold a civil protection job to have full access to a police computer, including the ability to scan fingerprints, create memos, and look up records.
 
-Config.CanNonCopAccessPoliceComputer = false
+EggrollPoliceSystem.Config.CanNonCopAccessPoliceComputer = false
 
 -- Distance before a person is logged out of the police computer automatically.
 
-Config.DistanceBeforePoliceComputerLogout = 200
+EggrollPoliceSystem.Config.DistanceBeforePoliceComputerLogout = 200
 
 -- Minimum arrest time for the improved arrest baton in seconds.
 
-Config.ArrestBatonMinArrestTime = 60
+EggrollPoliceSystem.Config.ArrestBatonMinArrestTime = 60
 
 -- Maximum arrest time for the improved arrest baton in seconds.
 
-Config.ArrestBatonMaxArrestTime = 500
+EggrollPoliceSystem.Config.ArrestBatonMaxArrestTime = 500
 
 -- Arrest GUI timeout time for the improved arrest baton in seconds. (This is here so a player cannot just freeze another player indefinitely by leaving the menu open.)
 
-Config.ArrestBatonGUITimeout = 60
+EggrollPoliceSystem.Config.ArrestBatonGUITimeout = 60
 
 -- Arrest baton cooldown in seconds. Set to 0 to disable. Cooldown starts from when the baton starts swinging. (This is here to help mitigate baton rushing.)
 
-Config.ArrestBatonCooldown = 0
+EggrollPoliceSystem.Config.ArrestBatonCooldown = 0
 
 -- How far can a cop be from a player to handcuff/un-handcuff them?
 
-Config.MaxHandcuffDistance = 90
+EggrollPoliceSystem.Config.MaxHandcuffDistance = 90
 
 -- How long should it take to handcuff a player?
 
-Config.TimeToHandcuff = 2
+EggrollPoliceSystem.Config.TimeToHandcuff = 2
 
 -- Should the player be able to "use" anything with the USE key while handcuffed?
 
-Config.CanUseWhileHandcuffed = false
+EggrollPoliceSystem.Config.CanUseWhileHandcuffed = false
 
 --[[
 
@@ -58,7 +56,7 @@ To add to config:
 
 - Distance of fingerprint scanner link.
 
-- Who has access to removing all memos including ones not created by them? (default to "TEAM_MAYOR") (Do something similar to Config.JobsToDisplayInRecords for this.)
+- Who has access to removing all memos including ones not created by them? (default to "TEAM_MAYOR") (Do something similar to EggrollPoliceSystem.Config.JobsToDisplayInRecords for this.)
 
 - Give handcuffs to cops?
 
