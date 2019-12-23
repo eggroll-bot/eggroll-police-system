@@ -27,18 +27,3 @@ SWEP.DrawAmmo = false
 function SWEP:Initialize( )
 	self:SetHoldType( "normal" )
 end
-
-function SWEP:DrawWorldModel( )
-end
-
-function SWEP:PreDrawViewModel( )
-	return true
-end
-
-function SWEP:PrimaryAttack( )
-	if not IsFirstTimePredicted( ) or CLIENT then return end
-end
-
-function SWEP:SecondaryAttack( )
-	if not IsFirstTimePredicted( ) or CLIENT then return end
-end
