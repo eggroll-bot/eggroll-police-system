@@ -21,6 +21,11 @@ end
 net.Receive( "EPS_FoundFingerprintMatch", function( )
 	local target = net.ReadEntity( )
 	local computer = net.ReadEntity( )
+
+	if not IsValid( computer ) then
+		return
+	end
+
 	local records_lookup = computer.Programs[ "Record Lookup" ]
 
 	if IsValid( computer.ComputerScreen.OpenProgram ) then

@@ -332,5 +332,8 @@ end
 
 net.Receive( "EPS_LoginToPoliceComputer", function( ) -- Log out on client
 	local computer = net.ReadEntity( )
-	computer:Logout( )
+
+	if IsValid( computer ) then
+		computer:Logout( )
+	end
 end )

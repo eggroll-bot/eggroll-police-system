@@ -25,7 +25,7 @@ end
 net.Receive( "EPS_RetrievePersonalRecords", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
