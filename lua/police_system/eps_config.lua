@@ -38,6 +38,10 @@ Config.ArrestBatonCooldown = 0
 
 Config.MaxHandcuffDistance = 90
 
+-- How long should it take to handcuff a player?
+
+Config.TimeToHandcuff = 2
+
 -- Should the player be able to "use" anything with the USE key while handcuffed?
 
 Config.CanUseWhileHandcuffed = false
