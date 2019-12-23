@@ -35,7 +35,7 @@ end
 
 function SWEP:FreeHandcuffs( ) -- Do not call this directly.
 	local ply = self:GetOwner( )
-	ply:SetNWBool( "EPS_Handcuffed", false ) -- nil won't change it on the client for some reason.
+	ply:SetNWBool( "EPS_Handcuffed", false ) -- nil won't change it on the client for some reason, so we need to use false.
 	ply:ManipulateBoneAngles( ply:LookupBone( "ValveBiped.Bip01_L_UpperArm" ), Angle( 0, 0, 0 ) )
 	ply:ManipulateBoneAngles( ply:LookupBone( "ValveBiped.Bip01_L_Forearm" ), Angle( 0, 0, 0 ) )
 	ply:ManipulateBoneAngles( ply:LookupBone( "ValveBiped.Bip01_L_Hand" ), Angle( 0, 0, 0 ) )
