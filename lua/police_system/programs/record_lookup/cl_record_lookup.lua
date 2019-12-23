@@ -67,7 +67,9 @@ function PROGRAM:Init( computer )
 	self:CreateMainMenu( )
 
 	net.Receive( "EPS_RetrievePersonalRecords", function( ) -- Needs to be in here because it needs to reference the program.
-		self:CreateRecords( ) -- Need to call CreateRecords from the metatable. Can't just use self.CreateRecords.
+		if self and self.CreateRecords then
+			self:CreateRecords( ) -- Need to call CreateRecords from the metatable. Can't just use self.CreateRecords.
+		end
 	end )
 end
 
