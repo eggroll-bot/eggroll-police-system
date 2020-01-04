@@ -12,7 +12,7 @@ function PROGRAM:CreateTitle( )
 	self.TitleLabel:CenterVertical( 0.1 )
 end
 
-function PROGRAM:Create2DTextPrompt( callback ) -- Calls the callback function after successful text entry with args: text.
+function PROGRAM:Create2DTextPrompt( text, callback ) -- Calls the callback function after successful text entry with args: text.
 	if not self.TextPromptEntry then
 		local scr_w, scr_h = ScrW( ), ScrH( )
 		self.TextPromptBG = vgui.Create( "EditablePanel" ) -- Have to use an EditablePanel because DTextEntries require something derived from EditablePanels.
@@ -43,13 +43,19 @@ function PROGRAM:Create2DTextPrompt( callback ) -- Calls the callback function a
 		end
 	else
 		self.TextPromptBG:Show( )
-		self.TextPromptEntry:SetText( "" )
+		self.TextPromptEntry:SetText( text or "" )
 
 		self.TextPromptSubmit.DoClick = function( ) -- To set the callback function again.
 			self.TextPromptBG:Hide( )
 			callback( self.TextPromptEntry:GetText( ) )
 		end
 	end
+end
+
+function PROGRAM:AddMemo( author, memo_id, memo, priority ) -- Player author, Number memo_id, String memo, String priority
+	local line = self.MemoList:AddLine( author:Name( ), memo, priority )
+	line.AuthorUserID = author:UserID( )
+	line.MemoID = memo_id
 end
 
 function PROGRAM:CreateAddPrompt( )
@@ -65,7 +71,7 @@ function PROGRAM:CreateAddPrompt( )
 	end
 
 	self.AddMemoPromptPanel = vgui.Create( "DPanel", self.AddMemoPanel )
-	self.AddMemoPromptPanel:SetSize( self.AddMemoPanel:GetWide( ) - 100, self.AddMemoPanel:GetTall( ) - 80 )
+	self.AddMemoPromptPanel:SetSize( self.AddMemoPanel:GetWide( ) * 0.5, self.AddMemoPanel:GetTall( ) * 0.5 )
 	self.AddMemoPromptPanel:CenterHorizontal( )
 	self.AddMemoPromptPanel:CenterVertical( )
 
@@ -74,71 +80,109 @@ function PROGRAM:CreateAddPrompt( )
 		surface.DrawRect( 0, 0, w, h )
 	end
 
+	local priority = 1 -- Default to low priority.
 	self.AddMemoPromptPriorityLow = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityLow:CenterHorizontal( 0.25 )
-	self.AddMemoPromptPriorityLow:CenterVertical( 0.15 )
+	self.AddMemoPromptPriorityLow:CenterVertical( 0.2 )
 	self.AddMemoPromptPriorityLow:SetValue( true )
 
-	self.AddMemoPromptPriorityLow.OnChange( function( _, checked )
+	self.AddMemoPromptPriorityLow.OnChange = function( _, checked )
 		if checked then
 			if self.AddMemoPromptPriorityMed:GetChecked( ) then
 				self.AddMemoPromptPriorityMed:SetChecked( false )
 			elseif self.AddMemoPromptPriorityHigh:GetChecked( ) then
 				self.AddMemoPromptPriorityHigh:SetChecked( false )
 			end
+
+			priority = 1
 		end
-	end )
+	end
 
 	self.AddMemoPromptPriorityMed = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityMed:CenterHorizontal( )
-	self.AddMemoPromptPriorityMed:CenterVertical( 0.15 )
+	self.AddMemoPromptPriorityMed:CenterVertical( 0.2 )
 
-	self.AddMemoPromptPriorityMed.OnChange( function( checked )
+	self.AddMemoPromptPriorityMed.OnChange = function( _, checked )
 		if checked then
 			if self.AddMemoPromptPriorityLow:GetChecked( ) then
 				self.AddMemoPromptPriorityLow:SetChecked( false )
 			elseif self.AddMemoPromptPriorityHigh:GetChecked( ) then
 				self.AddMemoPromptPriorityHigh:SetChecked( false )
 			end
+
+			priority = 2
 		end
-	end )
+	end
 
 	self.AddMemoPromptPriorityHigh = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityHigh:CenterHorizontal( 0.75 )
-	self.AddMemoPromptPriorityHigh:CenterVertical( 0.15 )
+	self.AddMemoPromptPriorityHigh:CenterVertical( 0.2 )
 
-	self.AddMemoPromptPriorityHigh.OnChange( function( checked )
+	self.AddMemoPromptPriorityHigh.OnChange = function( _, checked )
 		if checked then
 			if self.AddMemoPromptPriorityLow:GetChecked( ) then
 				self.AddMemoPromptPriorityLow:SetChecked( false )
 			elseif self.AddMemoPromptPriorityMed:GetChecked( ) then
 				self.AddMemoPromptPriorityMed:SetChecked( false )
 			end
+
+			priority = 3
 		end
-	end )
-
-	self.AddMemoPrompt = vgui.Create( "DTextEntry", self.AddMemoPromptPanel )
-	self.AddMemoPrompt:SetSize( self.AddMemoPromptPanel:GetWide( ) - 20, self.AddMemoPromptPanel:GetTall( ) - 110 )
-	self.AddMemoPrompt:CenterHorizontal( )
-	self.AddMemoPrompt:CenterVertical( 0.575 )
-	self.AddMemoPrompt:SetMultiline( true )
-	self.AddMemoPrompt.OldOnMousePressed = self.AddMemoPrompt.OnMousePressed -- I'm reallyyy starting to hate 3D2D VGUI now. It has no support for text entry focusing.
-
-	self.AddMemoPrompt.OnMousePressed = function( )
-		if not IsFirstTimePredicted( ) then return end
-
-		self:Create2DTextPrompt( function( text )
-			--
-		end )
-
-		return self.AddMemoPrompt:OldOnMousePressed( )
 	end
 
-	local x, y = self.AddMemoPrompt:GetPos( )
-	self.AddMemoPromptText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
-	self.AddMemoPromptText:SetText( "Memo:" )
-	self.AddMemoPromptText:SizeToContents( )
-	self.AddMemoPromptText:SetPos( x, y - 20 )
+	self.AddMemoPrompt = vgui.Create( "DButton", self.AddMemoPromptPanel )
+	self.AddMemoPrompt:SetText( "Add Memo" )
+	self.AddMemoPrompt:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
+	self.AddMemoPrompt:CenterHorizontal( )
+	self.AddMemoPrompt:CenterVertical( 0.5 )
+
+	self.AddMemoPrompt.DoClick = function( )
+		self:Create2DTextPrompt( self.AddMemoPrompt.Text, function( text )
+			if self and IsValid( self.AddMemoPrompt ) then
+				if text ~= "" then
+					self.AddMemoPrompt.Text = text
+					self.AddMemoSubmit:SetEnabled( true )
+				elseif self.AddMemoSubmit:IsEnabled( ) then -- Submit button enabled and text is empty.
+					self.AddMemoPrompt.Text = nil
+					self.AddMemoSubmit:SetEnabled( false )
+				end
+			end
+		end )
+	end
+
+	self.AddMemoSubmit = vgui.Create( "DButton", self.AddMemoPromptPanel )
+	self.AddMemoSubmit:SetText( "Submit" )
+	self.AddMemoSubmit:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
+	self.AddMemoSubmit:CenterHorizontal( 0.3 )
+	self.AddMemoSubmit:CenterVertical( 0.8 )
+	self.AddMemoSubmit:SetEnabled( false )
+
+	self.AddMemoSubmit.DoClick = function( )
+		local text = self.AddMemoPrompt.Text
+		net.Start( "EPS_AddMemo" )
+		net.WriteEntity( self.Computer )
+		net.WriteUInt( priority, 2 )
+		net.WriteString( text )
+		net.SendToServer( )
+
+		timer.Simple( 0.5, function( ) -- Refresh the list after 0.5 seconds (network delay).
+			if self and IsValid( self.MemoList ) then
+				self:PopulateList( )
+			end
+		end )
+
+		self.AddMemoPanel:Remove( )
+	end
+
+	self.AddMemoCancel = vgui.Create( "DButton", self.AddMemoPromptPanel )
+	self.AddMemoCancel:SetText( "Cancel" )
+	self.AddMemoCancel:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
+	self.AddMemoCancel:CenterHorizontal( 0.7 )
+	self.AddMemoCancel:CenterVertical( 0.8 )
+
+	self.AddMemoCancel.DoClick = function( )
+		self.AddMemoPanel:Remove( )
+	end
 end
 
 function PROGRAM:CreateAddButton( )
@@ -177,8 +221,59 @@ function PROGRAM:CreateDeleteButton( )
 	end
 
 	self.DeleteButtonBtn.DoClick = function( )
+		local to_delete
+
+		for _, v in pairs( self.MemoList.Lines ) do -- DListView.GetSelectedLine won't be available until the next update.
+			if v:IsSelected( ) then
+				to_delete = v
+				break
+			end
+		end
+
+		if not IsValid( to_delete ) or to_delete.AuthorUserID ~= LocalPlayer( ):UserID( ) then
+			return
+		end
+
+		net.Start( "EPS_RemoveMemo" )
+		net.WriteEntity( self.Computer )
+		net.WriteUInt( to_delete.MemoID, 16 )
+		net.SendToServer( )
+		self.MemoList:RemoveLine( to_delete:GetID( ) )
+	end
+end
+
+function PROGRAM:CreateExpandButton( )
+	self.ExpandButton = vgui.Create( "DButton", self.ProgramFrame )
+	self.ExpandButton:SetText( "Expand" )
+	self.ExpandButton:SizeToContents( )
+	self.ExpandButton:CenterHorizontal( )
+	self.ExpandButton:CenterVertical( 0.18 )
+
+	self.ExpandButton.DoClick = function( )
 		--
 	end
+end
+
+function PROGRAM:PopulateList( ) -- Populate self.MemoList with the proper memos. Make sure that when populating, you set DListView_Line.AuthorUserID and DListView_Line.MemoID.
+	net.Start( "EPS_RetrieveMemos" ) -- Receiver for this is at the bottom.
+	net.WriteEntity( self.Computer )
+	net.SendToServer( )
+
+	net.Receive( "EPS_RetrieveMemos", function( ) -- Needs to be in here because it needs to reference the program.
+		if not self or not IsValid( self.MemoList ) then return end
+		self.MemoList:Clear( ) -- Remove all lines before populating.
+		local json_tbl = net.ReadString( )
+		local memo_tbl = util.JSONToTable( json_tbl )
+
+		for author_user_id, author_memo_tbl in pairs( memo_tbl ) do
+			for memo_id, memo_data in pairs( author_memo_tbl ) do
+				local author = Player( author_user_id )
+				self:AddMemo( author, memo_id, memo_data.Text, memo_data.Priority )
+			end
+		end
+
+		self.MemoList:SortByColumn( 1 ) -- Sort by author.
+	end )
 end
 
 function PROGRAM:CreateMemoList( )
@@ -187,23 +282,22 @@ function PROGRAM:CreateMemoList( )
 	self.MemoList:CenterHorizontal( )
 	self.MemoList:CenterVertical( 0.6 )
 	self.MemoList:SetMultiSelect( false )
-	self.MemoList:AddColumn( "Author" ):SetWidth( 30 )
-	self.MemoList:AddColumn( "Message" ):SetWidth( 230 )
-	self.MemoList:AddColumn( "Memo Priority" ):SetWidth( 15 )
+	self.MemoList:AddColumn( "Author" ):SetWidth( 100 )
+	self.MemoList:AddColumn( "Message" ):SetWidth( 220 )
+	self.MemoList:AddColumn( "Memo Priority" ):SetWidth( 50 )
 	self.MemoList.VBar.btnGrip:Hide( )
-
 	self.MemoList.VBar.Paint = function( ) end
-
 	self.MemoList.VBar.OnMousePressed = function( ) end
-
-	self.MemoList:AddLine( "Test", "WWWWWWWWWWWWWWWWWWWWWWWWWWWW", "test" )
+	self:PopulateList( )
 end
 
-function PROGRAM:Init( )
+function PROGRAM:Init( computer )
 	self.ProgramFrame.WindowBackgroundColor = Color( 20, 20, 20 )
+	self.Computer = computer
 	self:CreateTitle( )
 	self:CreateAddButton( )
 	self:CreateDeleteButton( )
+	self:CreateExpandButton( )
 	self:CreateMemoList( )
 end
 
