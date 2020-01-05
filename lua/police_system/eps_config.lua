@@ -80,6 +80,4 @@ To add to config:
 
 - Localization Stuff
 
-Last, organize config into sections.
-
 ]]
