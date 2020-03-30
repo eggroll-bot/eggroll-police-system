@@ -185,6 +185,50 @@ function PROGRAM:CreateAddPrompt( )
 	end
 end
 
+function PROGRAM:Create2DMemoList( )
+	local scr_w, scr_h = ScrW( ), ScrH( )
+	local memo_panel = vgui.Create( "DPanel" )
+	memo_panel:SetSize( scr_w * 0.7, scr_h * 0.6 )
+	memo_panel:Center( )
+	memo_panel:MakePopup( )
+	memo_panel.MemoList = vgui.Create( "DListView", memo_panel )
+	memo_panel.MemoList:Dock( FILL )
+	memo_panel.MemoList:DockMargin( 5, 5, 5, 5 )
+	memo_panel.MemoList:SetMultiSelect( false )
+	memo_panel.MemoList:AddColumn( "Author" )
+	memo_panel.MemoList:AddColumn( "Message" )
+	memo_panel.MemoList:AddColumn( "Memo Priority" )
+	memo_panel.MemoList.VBar.btnGrip:Hide( )
+	memo_panel.MemoList.VBar.Paint = function( ) end
+	memo_panel.MemoList.VBar.OnMousePressed = function( ) end
+
+	return memo_panel
+end
+
+function PROGRAM:CreateDeletePrompt( )
+	local memo_panel = self:Create2DMemoList( )
+
+	for _, v in pairs( self.MemoList:GetLines( ) ) do
+		if v.AuthorUserID == LocalPlayer( ):UserID( ) then
+			local line = memo_panel.MemoList:AddLine( v:GetValue( 1 ), v:GetValue( 2 ), v:GetValue( 3 ) )
+			line:SetTooltip( "Click to delete." )
+			line.MemoID = v.MemoID
+		end
+	end
+
+	-- Next, implement the actual deletion.
+end
+
+function PROGRAM:CreateExpandPrompt( )
+	local memo_panel = self:Create2DMemoList( )
+
+	for _, v in pairs( self.MemoList:GetLines( ) ) do
+		memo_panel.MemoList:AddLine( v:GetValue( 1 ), v:GetValue( 2 ), v:GetValue( 3 ) ):SetTooltip( "Click to expand." )
+	end
+
+	-- Next, implement the expand menu.
+end
+
 function PROGRAM:CreateAddButton( )
 	self.AddButtonImg = vgui.Create( "DImage", self.ProgramFrame )
 	self.AddButtonImg:SetSize( 16, 16 )
@@ -221,24 +265,7 @@ function PROGRAM:CreateDeleteButton( )
 	end
 
 	self.DeleteButtonBtn.DoClick = function( )
-		local to_delete
-
-		for _, v in pairs( self.MemoList.Lines ) do -- DListView.GetSelectedLine won't be available until the next update.
-			if v:IsSelected( ) then
-				to_delete = v
-				break
-			end
-		end
-
-		if not IsValid( to_delete ) or to_delete.AuthorUserID ~= LocalPlayer( ):UserID( ) then
-			return
-		end
-
-		net.Start( "EPS_RemoveMemo" )
-		net.WriteEntity( self.Computer )
-		net.WriteUInt( to_delete.MemoID, 16 )
-		net.SendToServer( )
-		self.MemoList:RemoveLine( to_delete:GetID( ) )
+		self:CreateDeletePrompt( )
 	end
 end
 
@@ -250,7 +277,7 @@ function PROGRAM:CreateExpandButton( )
 	self.ExpandButton:CenterVertical( 0.18 )
 
 	self.ExpandButton.DoClick = function( )
-		--
+		self:CreateExpandPrompt( )
 	end
 end
 
