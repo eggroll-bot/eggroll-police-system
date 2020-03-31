@@ -25,11 +25,16 @@ end
 net.Receive( "EPS_RetrievePersonalRecords", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
 	local target = net.ReadEntity( )
+
+	if not IsValid( target ) or not target:IsPlayer( ) then
+		return
+	end
+
 	local arrest_record_file = file.Read( "eggroll_police_system/arrests/" .. target:SteamID64( ) .. ".txt", "DATA" )
 	local arrests = { }
 

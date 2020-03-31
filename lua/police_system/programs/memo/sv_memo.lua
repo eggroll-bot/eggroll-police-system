@@ -49,7 +49,7 @@ end
 net.Receive( "EPS_AddMemo", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
@@ -78,7 +78,7 @@ end )
 net.Receive( "EPS_RemoveMemo", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
@@ -93,7 +93,7 @@ end )
 net.Receive( "EPS_RetrieveMemos", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 

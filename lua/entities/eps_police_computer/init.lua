@@ -71,7 +71,7 @@ net.Receive( "EPS_LoginToPoliceComputer", function( _, ply )
 	local computer = net.ReadEntity( )
 	local login = net.ReadBool( )
 
-	if not IsValid( computer ) or ply:GetEyeTraceNoCursor( ).Entity ~= computer or ( not EggrollPoliceSystem.Config.CanNonCopAccessPoliceComputer and not ply:isCP( ) ) then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or ply:GetEyeTraceNoCursor( ).Entity ~= computer or ( not EggrollPoliceSystem.Config.CanNonCopAccessPoliceComputer and not ply:isCP( ) ) then
 		return
 	end
 
@@ -85,7 +85,7 @@ end )
 net.Receive( "EPS_OpenProgram", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
@@ -100,7 +100,7 @@ end )
 net.Receive( "EPS_CloseProgram", function( _, ply )
 	local computer = net.ReadEntity( )
 
-	if not IsValid( computer ) or computer:GetActiveUser( ) ~= ply then
+	if not IsValid( computer ) or computer:GetClass( ) ~= "eps_police_computer" or computer:GetActiveUser( ) ~= ply then
 		return
 	end
 
