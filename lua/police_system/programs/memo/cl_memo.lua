@@ -14,9 +14,8 @@ end
 
 function PROGRAM:Create2DTextPrompt( text, callback ) -- Calls the callback function after successful text entry with args: text.
 	if not self.TextPromptEntry then
-		local scr_w, scr_h = ScrW( ), ScrH( )
 		self.TextPromptBG = vgui.Create( "EditablePanel" ) -- Have to use an EditablePanel because DTextEntries require something derived from EditablePanels.
-		self.TextPromptBG:SetSize( scr_w * 0.3, scr_h * 0.2 )
+		self.TextPromptBG:SetSize( ScrW( ) * 0.3, ScrH( ) * 0.2 )
 		self.TextPromptBG:Center( )
 		self.TextPromptBG:MakePopup( )
 
@@ -80,10 +79,39 @@ function PROGRAM:CreateAddPrompt( )
 		surface.DrawRect( 0, 0, w, h )
 	end
 
+	self.AddMemoPromptPriorityText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
+	self.AddMemoPromptPriorityText:SetText( "Priority" )
+	self.AddMemoPromptPriorityText:SetFont( "DermaDefaultBold" )
+	self.AddMemoPromptPriorityText:SetContentAlignment( 5 )
+	self.AddMemoPromptPriorityText:SizeToContents( )
+	self.AddMemoPromptPriorityText:CenterHorizontal( )
+	self.AddMemoPromptPriorityText:CenterVertical( 0.12 )
+
+	self.AddMemoPromptPriorityLowText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
+	self.AddMemoPromptPriorityLowText:SetText( "Low" )
+	self.AddMemoPromptPriorityLowText:SetContentAlignment( 5 )
+	self.AddMemoPromptPriorityLowText:SizeToContents( )
+	self.AddMemoPromptPriorityLowText:CenterHorizontal( 0.25 )
+	self.AddMemoPromptPriorityLowText:CenterVertical( 0.25 )
+
+	self.AddMemoPromptPriorityMedText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
+	self.AddMemoPromptPriorityMedText:SetText( "Medium" )
+	self.AddMemoPromptPriorityMedText:SetContentAlignment( 5 )
+	self.AddMemoPromptPriorityMedText:SizeToContents( )
+	self.AddMemoPromptPriorityMedText:CenterHorizontal( )
+	self.AddMemoPromptPriorityMedText:CenterVertical( 0.25 )
+
+	self.AddMemoPromptPriorityHighText = vgui.Create( "DLabel", self.AddMemoPromptPanel )
+	self.AddMemoPromptPriorityHighText:SetText( "High" )
+	self.AddMemoPromptPriorityHighText:SetContentAlignment( 5 )
+	self.AddMemoPromptPriorityHighText:SizeToContents( )
+	self.AddMemoPromptPriorityHighText:CenterHorizontal( 0.75 )
+	self.AddMemoPromptPriorityHighText:CenterVertical( 0.25 )
+
 	local priority = 1 -- Default to low priority.
 	self.AddMemoPromptPriorityLow = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityLow:CenterHorizontal( 0.25 )
-	self.AddMemoPromptPriorityLow:CenterVertical( 0.2 )
+	self.AddMemoPromptPriorityLow:CenterVertical( 0.4 )
 	self.AddMemoPromptPriorityLow:SetValue( true )
 
 	self.AddMemoPromptPriorityLow.OnChange = function( _, checked )
@@ -95,12 +123,14 @@ function PROGRAM:CreateAddPrompt( )
 			end
 
 			priority = 1
+		else
+			self.AddMemoPromptPriorityLow:SetChecked( true )
 		end
 	end
 
 	self.AddMemoPromptPriorityMed = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityMed:CenterHorizontal( )
-	self.AddMemoPromptPriorityMed:CenterVertical( 0.2 )
+	self.AddMemoPromptPriorityMed:CenterVertical( 0.4 )
 
 	self.AddMemoPromptPriorityMed.OnChange = function( _, checked )
 		if checked then
@@ -111,12 +141,14 @@ function PROGRAM:CreateAddPrompt( )
 			end
 
 			priority = 2
+		else
+			self.AddMemoPromptPriorityMed:SetChecked( true )
 		end
 	end
 
 	self.AddMemoPromptPriorityHigh = vgui.Create( "DCheckBox", self.AddMemoPromptPanel )
 	self.AddMemoPromptPriorityHigh:CenterHorizontal( 0.75 )
-	self.AddMemoPromptPriorityHigh:CenterVertical( 0.2 )
+	self.AddMemoPromptPriorityHigh:CenterVertical( 0.4 )
 
 	self.AddMemoPromptPriorityHigh.OnChange = function( _, checked )
 		if checked then
@@ -127,14 +159,16 @@ function PROGRAM:CreateAddPrompt( )
 			end
 
 			priority = 3
+		else
+			self.AddMemoPromptPriorityHigh:SetChecked( true )
 		end
 	end
 
 	self.AddMemoPrompt = vgui.Create( "DButton", self.AddMemoPromptPanel )
-	self.AddMemoPrompt:SetText( "Add Memo" )
-	self.AddMemoPrompt:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
+	self.AddMemoPrompt:SetText( "Set Memo Text" )
+	self.AddMemoPrompt:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.35, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
 	self.AddMemoPrompt:CenterHorizontal( )
-	self.AddMemoPrompt:CenterVertical( 0.5 )
+	self.AddMemoPrompt:CenterVertical( 0.62 )
 
 	self.AddMemoPrompt.DoClick = function( )
 		self:Create2DTextPrompt( self.AddMemoPrompt.Text, function( text )
@@ -154,7 +188,7 @@ function PROGRAM:CreateAddPrompt( )
 	self.AddMemoSubmit:SetText( "Submit" )
 	self.AddMemoSubmit:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
 	self.AddMemoSubmit:CenterHorizontal( 0.3 )
-	self.AddMemoSubmit:CenterVertical( 0.8 )
+	self.AddMemoSubmit:CenterVertical( 0.85 )
 	self.AddMemoSubmit:SetEnabled( false )
 
 	self.AddMemoSubmit.DoClick = function( )
@@ -178,7 +212,7 @@ function PROGRAM:CreateAddPrompt( )
 	self.AddMemoCancel:SetText( "Cancel" )
 	self.AddMemoCancel:SetSize( self.AddMemoPromptPanel:GetWide( ) * 0.32, self.AddMemoPromptPanel:GetTall( ) * 0.12 )
 	self.AddMemoCancel:CenterHorizontal( 0.7 )
-	self.AddMemoCancel:CenterVertical( 0.8 )
+	self.AddMemoCancel:CenterVertical( 0.85 )
 
 	self.AddMemoCancel.DoClick = function( )
 		self.AddMemoPanel:Remove( )
@@ -186,14 +220,19 @@ function PROGRAM:CreateAddPrompt( )
 end
 
 function PROGRAM:Create2DMemoList( )
-	local scr_w, scr_h = ScrW( ), ScrH( )
 	local memo_panel = vgui.Create( "DPanel" )
-	memo_panel:SetSize( scr_w * 0.7, scr_h * 0.6 )
+	memo_panel:SetSize( ScrW( ) * 0.7, ScrH( ) * 0.6 )
 	memo_panel:Center( )
 	memo_panel:MakePopup( )
+
+	memo_panel.Paint = function( _, w, h )
+		surface.SetDrawColor( 50, 50, 50 )
+		surface.DrawRect( 0, 0, w, h )
+	end
+
 	memo_panel.MemoList = vgui.Create( "DListView", memo_panel )
 	memo_panel.MemoList:Dock( FILL )
-	memo_panel.MemoList:DockMargin( 5, 5, 5, 5 )
+	memo_panel.MemoList:DockMargin( 10, 10, 10, 0 )
 	memo_panel.MemoList:SetMultiSelect( false )
 	memo_panel.MemoList:AddColumn( "Author" )
 	memo_panel.MemoList:AddColumn( "Message" )
@@ -201,6 +240,15 @@ function PROGRAM:Create2DMemoList( )
 	memo_panel.MemoList.VBar.btnGrip:Hide( )
 	memo_panel.MemoList.VBar.Paint = function( ) end
 	memo_panel.MemoList.VBar.OnMousePressed = function( ) end
+
+	memo_panel.CloseBtn = vgui.Create( "DButton", memo_panel )
+	memo_panel.CloseBtn:Dock( BOTTOM )
+	memo_panel.CloseBtn:DockMargin( 10, 5, 10, 5 )
+	memo_panel.CloseBtn:SetText( "Close" )
+
+	memo_panel.CloseBtn.DoClick = function( )
+		memo_panel:Remove( )
+	end
 
 	return memo_panel
 end
@@ -213,20 +261,58 @@ function PROGRAM:CreateDeletePrompt( )
 			local line = memo_panel.MemoList:AddLine( v:GetValue( 1 ), v:GetValue( 2 ), v:GetValue( 3 ) )
 			line:SetTooltip( "Click to delete." )
 			line.MemoID = v.MemoID
+
+			line.OnSelect = function( )
+				Derma_Query( "Are you sure you want to delete this memo?", "Confirmation Box", "Yes", function( )
+					net.Start( "EPS_RemoveMemo" )
+					net.WriteEntity( self.Computer )
+					net.WriteUInt( line.MemoID, 16 )
+					net.SendToServer( )
+					self:PopulateList( )
+					memo_panel:Remove( )
+				end, "No" )
+			end
 		end
 	end
-
-	-- Next, implement the actual deletion.
 end
 
 function PROGRAM:CreateExpandPrompt( )
 	local memo_panel = self:Create2DMemoList( )
 
 	for _, v in pairs( self.MemoList:GetLines( ) ) do
-		memo_panel.MemoList:AddLine( v:GetValue( 1 ), v:GetValue( 2 ), v:GetValue( 3 ) ):SetTooltip( "Click to expand." )
-	end
+		local line = memo_panel.MemoList:AddLine( v:GetValue( 1 ), v:GetValue( 2 ), v:GetValue( 3 ) )
+		line:SetTooltip( "Click to expand." )
 
-	-- Next, implement the expand menu.
+		line.OnSelect = function( )
+			local expand_pnl = vgui.Create( "EditablePanel" ) -- Have to use an EditablePanel because DTextEntries require something derived from EditablePanels.
+			expand_pnl:SetSize( ScrW( ) * 0.3, ScrH( ) * 0.2 )
+			expand_pnl:Center( )
+			expand_pnl:MakePopup( )
+
+			expand_pnl.Paint = function( _, w, h )
+				surface.SetDrawColor( 75, 75, 75 )
+				surface.DrawRect( 0, 0, w, h )
+			end
+
+			local expand_text = vgui.Create( "DTextEntry", expand_pnl )
+			expand_text:SetSize( expand_pnl:GetWide( ) / 1.05, expand_pnl:GetTall( ) / 1.30 )
+			expand_text:CenterHorizontal( )
+			expand_text:CenterVertical( 0.44 )
+			expand_text:SetMultiline( true )
+			expand_text:SetText( line:GetValue( 2 ) )
+			expand_text:SetKeyboardInputEnabled( false )
+
+			local okay_btn = vgui.Create( "DButton", expand_pnl )
+			okay_btn:SetText( "OK" )
+			okay_btn:SetSize( expand_pnl:GetWide( ) * 0.2, expand_pnl:GetTall( ) * 0.1 )
+			okay_btn:CenterHorizontal( 0.5 )
+			okay_btn:CenterVertical( 0.91 )
+
+			okay_btn.DoClick = function( )
+				expand_pnl:Remove( )
+			end
+		end
+	end
 end
 
 function PROGRAM:CreateAddButton( )
@@ -281,8 +367,8 @@ function PROGRAM:CreateExpandButton( )
 	end
 end
 
-function PROGRAM:PopulateList( ) -- Populate self.MemoList with the proper memos. Make sure that when populating, you set DListView_Line.AuthorUserID and DListView_Line.MemoID.
-	net.Start( "EPS_RetrieveMemos" ) -- Receiver for this is at the bottom.
+function PROGRAM:PopulateList( )
+	net.Start( "EPS_RetrieveMemos" )
 	net.WriteEntity( self.Computer )
 	net.SendToServer( )
 
