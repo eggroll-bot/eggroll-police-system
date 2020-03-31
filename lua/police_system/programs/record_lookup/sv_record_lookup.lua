@@ -50,7 +50,13 @@ net.Receive( "EPS_RetrievePersonalRecords", function( _, ply )
 	data.name = target:Name( )
 	data.model = target:GetModel( )
 	data.job = GetJobNameForRecords( target )
-	data.salary = DarkRP.retrieveSalary( target )
+
+	if data.job == "Unknown" then
+		data.salary = "Unknown"
+	else
+		data.salary = DarkRP.formatMoney( DarkRP.retrieveSalary( target ) )
+	end
+
 	data.arrestrecord = arrests
 	net.Start( "EPS_RetrievePersonalRecords" )
 	net.WriteTable( data )
