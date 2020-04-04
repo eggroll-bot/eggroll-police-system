@@ -16,12 +16,10 @@ TOOL.Name = "#tool.epssaver.name"
 
 TOOL.Information = {
 	{
-		name = "left",
-		stage = 0
+		name = "left"
 	},
 	{
-		name = "right",
-		stage = 0
+		name = "right"
 	},
 	{
 		name = "reload"
