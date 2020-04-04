@@ -29,7 +29,7 @@ end
 function EggrollPoliceSystem.SaveDevice( ent )
 	local class = ent:GetClass( )
 
-	if not saveable_devices[ class ] or ent.Saved then
+	if not saveable_devices[ class ] or ent:GetNWBool( "saved" ) then
 		return
 	end
 
@@ -40,26 +40,26 @@ function EggrollPoliceSystem.SaveDevice( ent )
 	local id = EggrollPoliceSystem.GenerateDeviceID( )
 	saved_devices[ id ] = data
 	EggrollPoliceSystem.UpdateSaveFile( )
-	ent.Saved = true
+	ent:SetNWBool( "saved", true )
 	ent.PermID = id
 end
 
 
 -- Unsaves a device.
 function EggrollPoliceSystem.UnsaveDevice( ent )
-	if not saveable_devices[ ent:GetClass( ) ] or not ent.Saved then
+	if not saveable_devices[ ent:GetClass( ) ] or not ent:GetNWBool( "saved" ) then
 		return
 	end
 
 	saved_devices[ ent.PermID ] = nil
 	EggrollPoliceSystem.UpdateSaveFile( )
-	ent.Saved = nil
+	ent:SetNWBool( "saved", false )
 	ent.PermID = nil
 end
 
 -- Updates the position and angle of a saved device in the table.
 function EggrollPoliceSystem.UpdateSavedDevice( ent )
-	if not saveable_devices[ ent:GetClass( ) ] or not ent.Saved then
+	if not saveable_devices[ ent:GetClass( ) ] or not ent:GetNWBool( "saved" ) then
 		return
 	end
 
@@ -81,7 +81,7 @@ hook.Add( "InitPostEntity", "EPS_LoadSavedDeviceTable", function( )
 			ent:Spawn( )
 			ent:Activate( )
 			ent:GetPhysicsObject( ):EnableMotion( false )
-			ent.Saved = true
+			ent:SetNWBool( "saved", true )
 			ent.PermID = k
 		end
 	end
@@ -89,7 +89,7 @@ end )
 
 -- Replaces removed devices that are saved.
 hook.Add( "EntityRemoved", "EPS_ReplaceSavedDevice", function( ent_old )
-	if not saveable_devices[ ent_old:GetClass( ) ] or not ent_old.Saved then
+	if not saveable_devices[ ent_old:GetClass( ) ] or not ent_old:GetNWBool( "saved" ) then
 		return
 	end
 
@@ -103,7 +103,7 @@ hook.Add( "EntityRemoved", "EPS_ReplaceSavedDevice", function( ent_old )
 		ent:Spawn( )
 		ent:Activate( )
 		ent:GetPhysicsObject( ):EnableMotion( false )
-		ent.Saved = true
+		ent:SetNWBool( "saved", true )
 		ent.PermID = id
 	end
 end )
