@@ -3,7 +3,7 @@ local saveable_devices = {
 	[ "eps_fingerprint_scanner" ] = true
 }
 
-local saved_devices = { }
+local saved_devices
 
 -- Updates the flat file with the new saved_devices table.
 function EggrollPoliceSystem.UpdateSaveFile( )
@@ -38,11 +38,10 @@ function EggrollPoliceSystem.SaveDevice( ent )
 	data.pos = ent:GetPos( )
 	data.ang = ent:GetAngles( )
 	local id = EggrollPoliceSystem.GenerateDeviceID( )
-	data.id = id
 	saved_devices[ id ] = data
 	EggrollPoliceSystem.UpdateSaveFile( )
-	ent.PermID = id
 	ent.Saved = true
+	ent.PermID = id
 end
 
 
@@ -54,8 +53,8 @@ function EggrollPoliceSystem.UnsaveDevice( ent )
 
 	saved_devices[ ent.PermID ] = nil
 	EggrollPoliceSystem.UpdateSaveFile( )
-	ent.PermID = nil
 	ent.Saved = nil
+	ent.PermID = nil
 end
 
 -- Updates the position and angle of a saved device in the table.
@@ -69,5 +68,42 @@ function EggrollPoliceSystem.UpdateSavedDevice( ent )
 	EggrollPoliceSystem.UpdateSaveFile( )
 end
 
--- on startup, place down all saved devices and make it so device.Saved = true and if it's a police computer, device.PermID = ID.
--- make it so on EntityRemoved with saveable devices, they are placed back down and respawned.
+-- Loads the save table from the flat file when the server starts up.
+hook.Add( "InitPostEntity", "EPS_LoadSavedDeviceTable", function( )
+	saved_devices = util.JSONToTable( file.Read( "eps_saved_devices.txt" ) ) or { }
+
+	for k, v in pairs( saved_devices ) do
+		local ent = ents.Create( v.class )
+
+		if IsValid( ent ) then
+			ent:SetPos( v.pos )
+			ent:SetAngles( v.ang )
+			ent:Spawn( )
+			ent:Activate( )
+			ent:GetPhysicsObject( ):EnableMotion( false )
+			ent.Saved = true
+			ent.PermID = k
+		end
+	end
+end )
+
+-- Replaces removed devices that are saved.
+hook.Add( "EntityRemoved", "EPS_ReplaceSavedDevice", function( ent_old )
+	if not saveable_devices[ ent_old:GetClass( ) ] or not ent_old.Saved then
+		return
+	end
+
+	local id = ent_old.PermID
+	local data = saved_devices[ id ]
+	local ent = ents.Create( data.class )
+
+	if IsValid( ent ) then
+		ent:SetPos( data.pos )
+		ent:SetAngles( data.ang )
+		ent:Spawn( )
+		ent:Activate( )
+		ent:GetPhysicsObject( ):EnableMotion( false )
+		ent.Saved = true
+		ent.PermID = id
+	end
+end )
