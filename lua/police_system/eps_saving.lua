@@ -46,7 +46,6 @@ function EggrollPoliceSystem.SaveDevice( ent )
 	ent.PermID = id
 end
 
-
 -- Unsaves a device.
 function EggrollPoliceSystem.UnsaveDevice( ent )
 	if not saveable_devices[ ent:GetClass( ) ] or not ent:GetNWBool( "saved" ) then
