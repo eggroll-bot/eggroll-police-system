@@ -2,10 +2,11 @@
 
 EggrollPoliceSystem.Config.MaxDrawDist = 512
 
--- Which jobs should be displayed in the police computer records for a person. If the job is not listed here, it will be listed as "Unknown" in the police computer records program. Enter "CP" for all civil protection jobs or "all" for all jobs. All other jobs should be entered with "TEAM_[WhateverJob]". Example: "TEAM_GUN". Don't forget the commas between entries.
+-- Which ranks should be allowed to save/un-save/update permanently saved devices? This option will only work with CAMI compatible permission systems. If no compatible permission systems are found, the addon will check if the user is a superadmin.
 
-EggrollPoliceSystem.Config.JobsToDisplayInRecords = {
-	[ "CP" ] = true,
+EggrollPoliceSystem.Config.SavedDevicesPermissions = {
+	"superadmin",
+	"owner"
 }
 
 -- Can a person who does not hold a civil protection job be allowed to access a police computer? -- Setting this to true will allow a person who does not hold a civil protection job to have full access to a police computer, including the ability to scan fingerprints, create memos, and look up records.
@@ -15,6 +16,12 @@ EggrollPoliceSystem.Config.CanNonCopAccessPoliceComputer = false
 -- Distance before a person is logged out of the police computer automatically.
 
 EggrollPoliceSystem.Config.DistanceBeforePoliceComputerLogout = 200
+
+-- Which jobs should be displayed in the police computer records for a person. If the job is not listed here, it will be listed as "Unknown" in the police computer records program. Enter "CP" for all civil protection jobs or "all" for all jobs. All other jobs should be entered with "TEAM_[WhateverJob]". Example: "TEAM_GUN". Don't forget the commas between entries.
+
+EggrollPoliceSystem.Config.JobsToDisplayInRecords = {
+	[ "CP" ] = true,
+}
 
 -- Minimum arrest time for the improved arrest baton in seconds.
 
