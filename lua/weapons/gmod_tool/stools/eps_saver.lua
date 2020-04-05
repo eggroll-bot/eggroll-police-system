@@ -28,7 +28,23 @@ TOOL.Information = {
 
 function TOOL:LeftClick( trace )
 	local ent = trace.Entity
-	if not saveable_devices[ ent:GetClass( ) ] or ent:GetNWBool( "saved" ) then return false end
+	if not IsFirstTimePredicted( ) or ent == Entity( 0 ) then return end
+
+	if not saveable_devices[ ent:GetClass( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "The entity you are looking at is not saveable.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
+	if ent:GetNWBool( "saved" ) then
+		if CLIENT then
+			notification.AddLegacy( "The device you are looking at is already saved.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
 
 	if SERVER then
 		EggrollPoliceSystem.SaveDevice( ent )
@@ -39,7 +55,23 @@ end
 
 function TOOL:RightClick( trace )
 	local ent = trace.Entity
-	if not saveable_devices[ ent:GetClass( ) ] or not ent:GetNWBool( "saved" ) then return false end
+	if not IsFirstTimePredicted( ) or ent == Entity( 0 ) then return end
+
+	if not saveable_devices[ ent:GetClass( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "The entity you are looking at is not saveable.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
+	if not ent:GetNWBool( "saved" ) then
+		if CLIENT then
+			notification.AddLegacy( "The device you are looking at is not saved yet.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
 
 	if SERVER then
 		EggrollPoliceSystem.UnsaveDevice( ent )
@@ -50,7 +82,23 @@ end
 
 function TOOL:Reload( trace )
 	local ent = trace.Entity
-	if not saveable_devices[ ent:GetClass( ) ] or not ent:GetNWBool( "saved" ) then return false end
+	if not IsFirstTimePredicted( ) or ent == Entity( 0 ) then return end
+
+	if not saveable_devices[ ent:GetClass( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "The entity you are looking at is not saveable.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
+	if not ent:GetNWBool( "saved" ) then
+		if CLIENT then
+			notification.AddLegacy( "The device you are looking at is not saved yet.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
 
 	if SERVER then
 		EggrollPoliceSystem.UpdateSavedDevice( ent )
