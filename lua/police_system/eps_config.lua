@@ -2,11 +2,11 @@
 
 EggrollPoliceSystem.Config.MaxDrawDist = 512
 
--- Which ranks should be allowed to save/un-save/update permanently saved devices? This option will only work with CAMI compatible permission systems. If no compatible permission systems are found, the addon will check if the user is a superadmin.
+-- Which ranks should be allowed to save/un-save/update permanently saved devices?
 
 EggrollPoliceSystem.Config.SavedDevicesPermissions = {
-	"superadmin",
-	"owner"
+	[ "superadmin" ] = true,
+	[ "owner" ] = true
 }
 
 -- Can a person who does not hold a civil protection job be allowed to access a police computer? -- Setting this to true will allow a person who does not hold a civil protection job to have full access to a police computer, including the ability to scan fingerprints, create memos, and look up records.
