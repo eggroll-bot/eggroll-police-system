@@ -34,6 +34,7 @@ function EggrollPoliceSystem.SaveDevice( ent )
 		return
 	end
 
+	ent:GetPhysicsObject( ):EnableMotion( false )
 	local data = { }
 	data.class = class
 	data.pos = ent:GetPos( )
@@ -64,6 +65,7 @@ function EggrollPoliceSystem.UpdateSavedDevice( ent )
 		return
 	end
 
+	ent:GetPhysicsObject( ):EnableMotion( false )
 	saved_devices[ ent.PermID ].pos = ent:GetPos( )
 	saved_devices[ ent.PermID ].ang = ent:GetAngles( )
 	EggrollPoliceSystem.UpdateSaveFile( )
