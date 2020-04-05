@@ -3,7 +3,8 @@ local saveable_devices = {
 	[ "eps_fingerprint_scanner" ] = true
 }
 
-local saved_devices
+local file_data = file.Read( "eps_saved_devices.txt" )
+local saved_devices = file_data and util.JSONToTable( file_data ) or { }
 
 -- Updates the flat file with the new saved_devices table.
 function EggrollPoliceSystem.UpdateSaveFile( )
@@ -70,8 +71,6 @@ end
 
 -- Loads the save table from the flat file when the server starts up.
 hook.Add( "InitPostEntity", "EPS_LoadSavedDeviceTable", function( )
-	saved_devices = util.JSONToTable( file.Read( "eps_saved_devices.txt" ) ) or { }
-
 	for k, v in pairs( saved_devices ) do
 		local ent = ents.Create( v.class )
 
@@ -95,15 +94,18 @@ hook.Add( "EntityRemoved", "EPS_ReplaceSavedDevice", function( ent_old )
 
 	local id = ent_old.PermID
 	local data = saved_devices[ id ]
-	local ent = ents.Create( data.class )
 
-	if IsValid( ent ) then
-		ent:SetPos( data.pos )
-		ent:SetAngles( data.ang )
-		ent:Spawn( )
-		ent:Activate( )
-		ent:GetPhysicsObject( ):EnableMotion( false )
-		ent:SetNWBool( "saved", true )
-		ent.PermID = id
-	end
+	timer.Simple( 1, function( ) -- Apparently, cleaning up the server can cause a spike in entities being created? So, we're gonna delay this a bit.
+		local ent = ents.Create( data.class )
+
+		if IsValid( ent ) then
+			ent:SetPos( data.pos )
+			ent:SetAngles( data.ang )
+			ent:Spawn( )
+			ent:Activate( )
+			ent:GetPhysicsObject( ):EnableMotion( false )
+			ent:SetNWBool( "saved", true )
+			ent.PermID = id
+		end
+	end )
 end )
