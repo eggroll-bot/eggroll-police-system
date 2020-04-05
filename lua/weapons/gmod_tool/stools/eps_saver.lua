@@ -38,6 +38,14 @@ function TOOL:LeftClick( trace )
 		return false
 	end
 
+	if not EggrollPoliceSystem.Config.SavedDevicesPermissions[ self:GetOwner( ):GetUserGroup( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "You do not have permission to use this tool.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
 	if ent:GetNWBool( "saved" ) then
 		if CLIENT then
 			notification.AddLegacy( "The device you are looking at is already saved.", NOTIFY_ERROR, 3 )
@@ -65,6 +73,14 @@ function TOOL:RightClick( trace )
 		return false
 	end
 
+	if not EggrollPoliceSystem.Config.SavedDevicesPermissions[ self:GetOwner( ):GetUserGroup( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "You do not have permission to use this tool.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
 	if not ent:GetNWBool( "saved" ) then
 		if CLIENT then
 			notification.AddLegacy( "The device you are looking at is not saved yet.", NOTIFY_ERROR, 3 )
@@ -87,6 +103,14 @@ function TOOL:Reload( trace )
 	if not saveable_devices[ ent:GetClass( ) ] then
 		if CLIENT then
 			notification.AddLegacy( "The entity you are looking at is not saveable.", NOTIFY_ERROR, 3 )
+		end
+
+		return false
+	end
+
+	if not EggrollPoliceSystem.Config.SavedDevicesPermissions[ self:GetOwner( ):GetUserGroup( ) ] then
+		if CLIENT then
+			notification.AddLegacy( "You do not have permission to use this tool.", NOTIFY_ERROR, 3 )
 		end
 
 		return false
