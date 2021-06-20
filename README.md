@@ -3,4 +3,4 @@ This project is designed to overhaul the policing system in the Garry's Mod Dark
 
 This project is somewhat functional, but has some bugs and is missing a lot of planned features, as highlighted in the repository's issues section. The UI also needs to be redesigned.
 
-🚧 Consider this project as abandoned. 🚧
+🚧 Consider this project abandoned. 🚧
